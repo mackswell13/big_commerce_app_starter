@@ -1,4 +1,5 @@
 class OauthController < ApplicationController
+  allow_unauthenticated_access
   include HTTParty
 
   def index
@@ -22,12 +23,18 @@ class OauthController < ApplicationController
     signed_jwt.verify_signature!(algorithm: "HS256", key: Rails.application.credentials.bc_client_secret)
     signed_jwt.verify_claims!(:exp, :jti, :nbf)
     signed_jwt.verify_claims!(iss: [ "bc" ])
-
+    payload = signed_jwt.payload
 
     # Login here
+    store = Store.find_by(context: payload["sub"])
+    user = User.find_or_create_by(email_address: payload["user"]["email"], bc_id: payload["user"]["id"], store_id: store.id)
 
+    if payload["owner"]["email"] == user.email_address
+      user.is_owner = true
+      user.save
+    end
 
-    render plain: "#{signed_jwt.payload.inspect}"
+    start_new_session_for user
   end
 
 

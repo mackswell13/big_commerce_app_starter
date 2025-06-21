@@ -10,12 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_21_013259) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_21_191041) do
+  create_table "sessions", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "ip_address"
+    t.string "user_agent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
   create_table "stores", force: :cascade do |t|
     t.string "token"
     t.string "scope"
     t.string "context"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["context"], name: "index_stores_on_context", unique: true
   end
+
+# Could not dump table "users" because of following StandardError
+#   Unknown type 'bool' for column 'is_owner'
+
+
+  add_foreign_key "sessions", "users"
+  add_foreign_key "users", "stores"
 end
