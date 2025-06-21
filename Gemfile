@@ -63,3 +63,5 @@ group :test do
 end
 
 gem "httparty", "~> 0.23.1"
+
+gem "jwt", "~> 3.0"
