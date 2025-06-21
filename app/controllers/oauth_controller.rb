@@ -34,7 +34,9 @@ class OauthController < ApplicationController
       user.save
     end
 
-    start_new_session_for user
+    resume_or_restart_session_for user
+
+    redirect_to dashboard_path
   end
 
 
