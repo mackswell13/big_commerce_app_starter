@@ -64,4 +64,4 @@ end
 
 gem "httparty", "~> 0.23.1"
 
-gem "jwt", "~> 3.0"
+gem "jwt", "~> 3.1"
